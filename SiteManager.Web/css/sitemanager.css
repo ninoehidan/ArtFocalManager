@@ -1,0 +1,34 @@
+﻿.RowStyle {
+    height: 50px;
+}
+
+.AlternateRowStyle {
+    height: 50px;
+}
+
+.HeaderStyle {
+    height: 20px;
+    line-height: 50px;
+    align-content: center;
+    align-items: center;
+    align-self: center;
+}
+
+.modalBackground {
+    background-color: Gray;
+    /*filter: alpha(opacity=10);
+    opacity: 0.1;*/
+}
+
+.modalPopup {
+    background-color: #ffffdd;
+    border-width: 3px;
+    border-style: solid;
+    border-color: Gray;
+    padding: 3px;
+    width: 250px;
+}
+
+    .modalPopup p {
+        padding: 5px;
+    }

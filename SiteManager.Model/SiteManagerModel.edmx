@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="siteManagerModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="empresas">
+          <Key>
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idEmpresa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nmEmpresa" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="dsCNPJ" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="dsEndereco" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="flAtivo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="grupos_produto">
+          <Key>
+            <PropertyRef Name="idGrupo" />
+          </Key>
+          <Property Name="idGrupo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nmGrupo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="dsGrupo" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="imagens">
+          <Key>
+            <PropertyRef Name="idImagem" />
+          </Key>
+          <Property Name="idImagem" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nmImagem" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="imImagem" Type="blob" />
+        </EntityType>
+        <EntityType Name="produtos">
+          <Key>
+            <PropertyRef Name="idProduto" />
+            <PropertyRef Name="idGrupo" />
+          </Key>
+          <Property Name="idProduto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idGrupo" Type="int" Nullable="false" />
+          <Property Name="nmProduto" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="dsProdutos" Type="varchar" MaxLength="500" />
+          <Property Name="flAtivo" Type="bit" Nullable="false" />
+          <Property Name="flEstoque" Type="bit" />
+        </EntityType>
+        <EntityType Name="produtos_empresa">
+          <Key>
+            <PropertyRef Name="idProduto" />
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idProduto" Type="int" Nullable="false" />
+          <Property Name="idEmpresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="produtos_imagens">
+          <Key>
+            <PropertyRef Name="idImagem" />
+            <PropertyRef Name="idProduto" />
+          </Key>
+          <Property Name="idImagem" Type="int" Nullable="false" />
+          <Property Name="idProduto" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_grupos_produto_produto">
+          <End Role="grupos_produto" Type="Self.grupos_produto" Multiplicity="1" />
+          <End Role="produtos" Type="Self.produtos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grupos_produto">
+              <PropertyRef Name="idGrupo" />
+            </Principal>
+            <Dependent Role="produtos">
+              <PropertyRef Name="idGrupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'produto_empresa_produtos' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="produto_empresa_produtos" />-->
+        <Association Name="produtos_empresa_empresas">
+          <End Role="empresas" Type="Self.empresas" Multiplicity="1" />
+          <End Role="produtos_empresa" Type="Self.produtos_empresa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="idEmpresa" />
+            </Principal>
+            <Dependent Role="produtos_empresa">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'produtos_imagens_produtos' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="produtos_imagens_produtos" />-->
+        <EntityContainer Name="siteManagerModelStoreContainer">
+          <EntitySet Name="empresas" EntityType="Self.empresas" Schema="artfocal" store:Type="Tables" />
+          <EntitySet Name="grupos_produto" EntityType="Self.grupos_produto" Schema="artfocal" store:Type="Tables" />
+          <EntitySet Name="imagens" EntityType="Self.imagens" Schema="artfocal" store:Type="Tables" />
+          <EntitySet Name="produtos" EntityType="Self.produtos" Schema="artfocal" store:Type="Tables" />
+          <EntitySet Name="produtos_empresa" EntityType="Self.produtos_empresa" Schema="artfocal" store:Type="Tables" />
+          <EntitySet Name="produtos_imagens" EntityType="Self.produtos_imagens" Schema="artfocal" store:Type="Tables" />
+          <AssociationSet Name="fk_grupos_produto_produto" Association="Self.fk_grupos_produto_produto">
+            <End Role="grupos_produto" EntitySet="grupos_produto" />
+            <End Role="produtos" EntitySet="produtos" />
+          </AssociationSet>
+          <AssociationSet Name="produtos_empresa_empresas" Association="Self.produtos_empresa_empresas">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="produtos_empresa" EntitySet="produtos_empresa" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="siteManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="artfocalEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="empresas" EntityType="siteManagerModel.empresas" />
+          <EntitySet Name="grupos_produto" EntityType="siteManagerModel.grupos_produto" />
+          <EntitySet Name="imagens" EntityType="siteManagerModel.imagens" />
+          <EntitySet Name="produtos" EntityType="siteManagerModel.produtos" />
+          <EntitySet Name="produtos_empresa" EntityType="siteManagerModel.produtos_empresa" />
+          <EntitySet Name="produtos_imagens" EntityType="siteManagerModel.produtos_imagens" />
+          <AssociationSet Name="produtos_empresa_empresas" Association="siteManagerModel.produtos_empresa_empresas">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="produtos_empresa" EntitySet="produtos_empresa" />
+          </AssociationSet>
+          <AssociationSet Name="fk_grupos_produto_produto" Association="siteManagerModel.fk_grupos_produto_produto">
+            <End Role="grupos_produto" EntitySet="grupos_produto" />
+            <End Role="produtos" EntitySet="produtos" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="empresas">
+          <Key>
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nmEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dsCNPJ" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="dsEndereco" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="flAtivo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="produtos_empresa" Relationship="siteManagerModel.produtos_empresa_empresas" FromRole="empresas" ToRole="produtos_empresa" />
+        </EntityType>
+        <EntityType Name="grupos_produto">
+          <Key>
+            <PropertyRef Name="idGrupo" />
+          </Key>
+          <Property Name="idGrupo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nmGrupo" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="dsGrupo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="produtos" Relationship="siteManagerModel.fk_grupos_produto_produto" FromRole="grupos_produto" ToRole="produtos" />
+        </EntityType>
+        <EntityType Name="imagens">
+          <Key>
+            <PropertyRef Name="idImagem" />
+          </Key>
+          <Property Name="idImagem" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nmImagem" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="imImagem" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="produtos">
+          <Key>
+            <PropertyRef Name="idProduto" />
+            <PropertyRef Name="idGrupo" />
+          </Key>
+          <Property Name="idProduto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idGrupo" Type="Int32" Nullable="false" />
+          <Property Name="nmProduto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dsProdutos" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="flAtivo" Type="Boolean" Nullable="false" />
+          <Property Name="flEstoque" Type="Boolean" />
+          <NavigationProperty Name="grupos_produto" Relationship="siteManagerModel.fk_grupos_produto_produto" FromRole="produtos" ToRole="grupos_produto" />
+        </EntityType>
+        <EntityType Name="produtos_empresa">
+          <Key>
+            <PropertyRef Name="idProduto" />
+            <PropertyRef Name="idEmpresa" />
+          </Key>
+          <Property Name="idProduto" Type="Int32" Nullable="false" />
+          <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="empresas" Relationship="siteManagerModel.produtos_empresa_empresas" FromRole="produtos_empresa" ToRole="empresas" />
+        </EntityType>
+        <EntityType Name="produtos_imagens">
+          <Key>
+            <PropertyRef Name="idImagem" />
+            <PropertyRef Name="idProduto" />
+          </Key>
+          <Property Name="idImagem" Type="Int32" Nullable="false" />
+          <Property Name="idProduto" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="produtos_empresa_empresas">
+          <End Type="siteManagerModel.empresas" Role="empresas" Multiplicity="1" />
+          <End Type="siteManagerModel.produtos_empresa" Role="produtos_empresa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="idEmpresa" />
+            </Principal>
+            <Dependent Role="produtos_empresa">
+              <PropertyRef Name="idEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_grupos_produto_produto">
+          <End Type="siteManagerModel.grupos_produto" Role="grupos_produto" Multiplicity="1" />
+          <End Type="siteManagerModel.produtos" Role="produtos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grupos_produto">
+              <PropertyRef Name="idGrupo" />
+            </Principal>
+            <Dependent Role="produtos">
+              <PropertyRef Name="idGrupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="siteManagerModelStoreContainer" CdmEntityContainer="artfocalEntities">
+          <EntitySetMapping Name="empresas">
+            <EntityTypeMapping TypeName="siteManagerModel.empresas">
+              <MappingFragment StoreEntitySet="empresas">
+                <ScalarProperty Name="flAtivo" ColumnName="flAtivo" />
+                <ScalarProperty Name="dsEndereco" ColumnName="dsEndereco" />
+                <ScalarProperty Name="dsCNPJ" ColumnName="dsCNPJ" />
+                <ScalarProperty Name="nmEmpresa" ColumnName="nmEmpresa" />
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grupos_produto">
+            <EntityTypeMapping TypeName="siteManagerModel.grupos_produto">
+              <MappingFragment StoreEntitySet="grupos_produto">
+                <ScalarProperty Name="dsGrupo" ColumnName="dsGrupo" />
+                <ScalarProperty Name="nmGrupo" ColumnName="nmGrupo" />
+                <ScalarProperty Name="idGrupo" ColumnName="idGrupo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="imagens">
+            <EntityTypeMapping TypeName="siteManagerModel.imagens">
+              <MappingFragment StoreEntitySet="imagens">
+                <ScalarProperty Name="imImagem" ColumnName="imImagem" />
+                <ScalarProperty Name="nmImagem" ColumnName="nmImagem" />
+                <ScalarProperty Name="idImagem" ColumnName="idImagem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produtos">
+            <EntityTypeMapping TypeName="siteManagerModel.produtos">
+              <MappingFragment StoreEntitySet="produtos">
+                <ScalarProperty Name="flEstoque" ColumnName="flEstoque" />
+                <ScalarProperty Name="flAtivo" ColumnName="flAtivo" />
+                <ScalarProperty Name="dsProdutos" ColumnName="dsProdutos" />
+                <ScalarProperty Name="nmProduto" ColumnName="nmProduto" />
+                <ScalarProperty Name="idGrupo" ColumnName="idGrupo" />
+                <ScalarProperty Name="idProduto" ColumnName="idProduto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produtos_empresa">
+            <EntityTypeMapping TypeName="siteManagerModel.produtos_empresa">
+              <MappingFragment StoreEntitySet="produtos_empresa">
+                <ScalarProperty Name="idEmpresa" ColumnName="idEmpresa" />
+                <ScalarProperty Name="idProduto" ColumnName="idProduto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produtos_imagens">
+            <EntityTypeMapping TypeName="siteManagerModel.produtos_imagens">
+              <MappingFragment StoreEntitySet="produtos_imagens">
+                <ScalarProperty Name="idProduto" ColumnName="idProduto" />
+                <ScalarProperty Name="idImagem" ColumnName="idImagem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
